@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SurveyThree</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <% if user_signed_in? && current_user.admin?%>
+    <div id="nav">
+      <ul>
+        <li><a href="/users/">Users</a></li>
+        <li><a href="/surveys/">Surveys</a></li>
+        <li><a href="/questions/">Questions</a></li>
+        <li><a href="/answers/">Answers</a></li>
+        <li><a href="/user_answers/">UserAnswers</a></li>
+        <li class="inferences"><a href="/inferences/">Inferences</a></li>
+        <li class="inferences"><a href="/inference_weights/">Inference Weights</a></li>
+        <li class="inferences"><a href="/inference_clarifications/">Clarifications</a></li>
+        <li class="lifestyles"><a href="/lifestyle_cues/">Lifestyle Cues</a></li>
+        <li class="lifestyles"><a href="/lifestyle_subgenres/">Lifestyle Subgenres</a></li>
+        <li class="analytics"><a href="/analytics/">Inference Success</a></li>
+        <li class="analytics"><a href="/analytics/truthiness">Truthiness</a></li>
+        <li class="analytics"><a href="/analytics/lifestyle">Lifestyle</a></li>
+        <!--
+        <li class="connectors"><a href="/lifestyle_cue_inference_connectors">Cue-Inference</a></li>
+        <li class="connectors"><a href="/lifestyle_cue_inference_clarification_connectors">Cue-Clarification</a></li>
+        <li class="connectors"><a href="/lifestyle_subgenre_inference_connectors">Subgenre-Inference</a></li>
+        <li class="connectors"><a href="/lifestyle_subgenre_inference_clarification_connectors">Subgenre-Clarification</a></li>
+        -->
+      </ul>
+    </div>
+  <%end%>
+  <center>
+    <p>
+      Please refrain from using the back button during the survey.
+    </p>
+  </center>
+  <div id="header">
+    <div id="authentication" class="hidden">
+      <% if user_signed_in? %>
+        <%= current_user.name %>
+        <%= link_to('sign out', destroy_user_session_path, :method => :delete) %>
+      <% else %>
+        <%= link_to('sign in', new_user_session_path) %>
+        or
+        <%= link_to('register', new_user_registration_path) %>
+      <% end %>
+    </div>
+  </div>
+
+  <p class="alert"><%= alert %></p>
+  <%-if new_user_session_path != request.env['PATH_INFO'] && current_user.nil? && new_user_registration_path != request.env['PATH_INFO'] && notice.nil? && alert.nil? && request.env['PATH_INFO'] != "/users"%>
+    <center style="margin-top: 300px">
+    <h1 style="margin-left: 0px">Welcome</h1>
+    <%= link_to("Let's get started", new_user_registration_path, :id => 'signUpButton', :style => 'width: 200px;') %>
+    <br/>
+    <br/>
+  </center>
+  <%- else %>
+    <%= yield %>
+  <%- end %>
+
+</body>
+</html>

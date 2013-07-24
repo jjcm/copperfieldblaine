@@ -1,0 +1,19 @@
+= form_for([@inference_clarification_weight], remote: true) do |f|
+  - if @inference_clarification_weight.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@inference_clarification_weight.errors.count, "error")} prohibited this inference_clarification_weight from being saved:"
+      %ul
+        - @inference_clarification_weight.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field{:onclick => "$('#inference_clarification_weight_inference_id').combobox()"}
+    = f.label :inference_id
+    = f.collection_select :inference_id, @inferences, :id, :inference
+  .field
+    = f.label :weight
+    = f.number_field :weight
+  .field.hidden
+    = f.label :inference_clarification_id
+    = f.number_field :inference_clarification_id, :value => clarification
+  .actions
+    = f.submit 'Save'

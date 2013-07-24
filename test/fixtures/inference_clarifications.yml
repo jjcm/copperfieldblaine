@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  clarification: MyString
+  inference_id: 1
+
+two:
+  clarification: MyString
+  inference_id: 1

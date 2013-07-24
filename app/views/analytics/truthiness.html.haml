@@ -1,0 +1,84 @@
+%h1 Truthiness
+%h2 Of the inferences marked FALSE, shows the percent that were clarified to Same, Middle, or Opposite.
+%h2 The darker green squares mean a greater the difference between Same, Middle, or Opposite. 
+%h2 The darker green squares indicate we need to reword the inference, OR adjust the answer --> inference relationship (pairing and weight).
+%table
+  %tr
+    %th Inference
+    - @inferences.each do |inference|
+      %th{:id => "inference#{inference.id}"}
+        = inference.inference
+  %tr
+    %td.nospace 
+      %table
+        %tr
+          %th Same
+        %tr
+          %th Middle
+        %tr
+          %th Opposite
+    - @inferences.each do |inference|
+      - opposite = 0.0
+      - middle = 0.0
+      - same = 0.0
+      %td.nospace
+        - inference.user_inference_responses.each do |response|
+          - if (!response.response)
+            - if (!response.inference_clarification.nil?)
+              - if (response.inference_clarification.truth_weight == 10)
+                - same = same + 1
+                
+              - if (response.inference_clarification.truth_weight == 5)
+                - middle = middle + 1
+
+              - if (response.inference_clarification.truth_weight == 0)
+                - opposite = opposite + 1
+        - total = same + middle + opposite
+        %table
+          - if total > 0
+            %tr.same
+              %td{:style=>"background-color: rgba(145,209,0,#{(same * 0.9/total) + 0.1})"}
+                &nbsp;
+                = formatPercentage(same/total)
+                %br
+                %span.fraction
+                  = "(#{same.round}/#{total.round})"
+                - if same != 0
+                  .clarification
+                    - inference.user_inference_responses.each do |response|
+                      - if (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10)
+                        %p
+                          = response.inference_clarification.clarification
+            %tr.middle
+              %td{:style=>"background-color: rgba(145,209,0,#{(middle * 0.9/total) + 0.1})"}
+                &nbsp;
+                = formatPercentage(middle/total)
+                %br
+                %span.fraction
+                  = "(#{middle.round}/#{total.round})"
+                - if middle != 0
+                  .clarification
+                    - inference.user_inference_responses.each do |response|
+                      - if (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 5)
+                        %p
+                          = response.inference_clarification.clarification
+            %tr.opposite
+              %td{:style=>"background-color: rgba(145,209,0,#{(opposite * 0.9/total) + 0.1})"}
+                &nbsp;
+                = formatPercentage(opposite/total)
+                %br
+                %span.fraction
+                  = "(#{opposite.round}/#{total.round})"
+                - if opposite != 0
+                  .clarification
+                    - inference.user_inference_responses.each do |response|
+                      - if (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 0)
+                        %p
+                          = response.inference_clarification.clarification
+          -else
+            %tr 
+              %td 0%
+            %tr 
+              %td 0%
+            %tr 
+              %td 0%

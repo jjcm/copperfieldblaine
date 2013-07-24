@@ -1,0 +1,24 @@
+- if ( current_user.admin? )
+  %h1 Listing inference_clarifications
+
+  %table
+    %tr
+      %th Clarification
+      %th Inference
+      %th Truth Weight
+      %th
+      %th
+      %th
+
+    - @inference_clarifications.each do |inference_clarification|
+      %tr
+        %td= inference_clarification.clarification
+        %td= inference_clarification.inference.inference
+        %td= inference_clarification.truth_weight
+        %td= link_to 'Show', inference_clarification
+        %td= link_to 'Edit', edit_inference_clarification_path(inference_clarification)
+        %td= link_to 'Destroy', inference_clarification, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+  %br
+
+  = link_to 'New Inference clarification', new_inference_clarification_path

@@ -1,0 +1,69 @@
+%p#notice= notice
+#inferences
+  - totalValidInferences = 0
+  - @user_inference_weights.each  do |weight|
+    - if ( weight.weight >= 80 )
+      - totalValidInferences = totalValidInferences + 1
+      .inference{:id => "inference#{weight.inference.id}"}
+        .left
+          %h4 
+            %span
+              = weight.inference.inference
+              - if current_user.admin?
+                ( combined weight: 
+                = weight.weight
+                )
+        .right
+          %ul.inferenceClarifications{:id => "inferenceList#{weight.inference.id}"}
+            - if current_user.admin?
+              - weight.inference.inference_clarifications.each do |clarification|
+                %li 
+                  %input{:type=>'radio', :name=> weight.inference.id, :id=>"clarification#{clarification.id}"}
+                  %label{:for=>"clarification#{clarification.id}"}
+                    = clarification.clarification
+                  - if current_user.admin?
+                    %table#clarifications
+                      - clarification.inference_clarification_weights.each do |inference_weight|
+                        %tr
+                          %td
+                            = inference_weight.inference.inference
+                          %td
+                            = inference_weight.weight
+                    %p{:id => "newInferenceClarificationWeight#{clarification.id}"}
+                      = link_to 'new inference clarification weight', {:action => 'new_inference_clarification_weight_partial', :clarification => clarification.id}, remote: true, :onclick => "clarification = #{clarification.id}"
+            - else 
+              = link_to 'new user_inference_response_partial', {:action => 'new_user_inference_response_partial', :inference => weight.inference.id}, remote: true, :class => "newUserInferenceResponsePartialLink hidden"
+              .answerArea{:id => "userInferenceResponseFor#{weight.inference.id}"}
+
+      - if current_user.admin?
+        %p.newClarification{:id => "newClarification#{weight.inference.id}"}
+          = link_to 'new clarification', {:action => 'new_inference_clarification_partial', :inference => weight.inference.id}, remote: true, :onclick => "inference = #{weight.inference.id}"
+
+#thankyou{:class => "#{totalValidInferences > 0 ? 'hidden' : ''}"}
+  %h1 Thank you - you are almost done! Here is your completion codeword: <strong>Bubblegum</strong>. 
+  %h2 Please click 'Answer' now. You will then need to enter this codeword in the window that opens.
+  %br
+  = image_tag('gumball.png')
+
+:javascript
+  var question = 0;
+  var numberOfQuestions = #{totalValidInferences};
+  var answer = 0;
+  var submitted = false;
+  var successfulSubmissions = 0;
+  $(document).ready(function(){$('.newUserInferenceResponsePartialLink').each(function(){$(this).click()})});
+  /*
+  $("#submitAnswers").click(function(){
+    if(!submitted) {
+      submitted = true;
+      $('#submitAnswers').val('submitting...');
+      $('.submitAnswerButtons').each(function(){$(this).click()});
+    }
+  });
+  */
+  function updateCount(){
+    successfulSubmissions++;
+    if (successfulSubmissions == numberOfQuestions){
+      $('#thankyou').removeClass('hidden');
+    }
+  };

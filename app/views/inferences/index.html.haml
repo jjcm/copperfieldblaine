@@ -1,0 +1,200 @@
+- if current_user.admin?
+  %h1 Listing inferences
+
+  #inferences
+    - @inferences.each  do |inference|
+      .inference
+        .left
+          %h4 
+            %span
+              = inference.inference
+          %h5
+            Lifestyle Cues
+          %ul.lifestyleCues{:id => "cuesForInference#{inference.id}"}
+            - inference.lifestyle_cue_inference_connectors.each do |cue|
+              %li
+                = cue.lifestyle_cue.cue
+                (
+                = link_to 'Destroy', cue, :method => :delete, :data => { :confirm => 'Are you sure?' }
+                |
+                = link_to 'new subgenre', {:action => 'new_lifestyle_subgenre_partial', :inference => inference.id, :cue => cue.lifestyle_cue.id}, remote: true
+                )
+                %ul
+                  - inference.lifestyle_subgenres.each do |sub|
+                    -# if sub.lifestyle_cue.id == cue.id
+                    %li
+                      = sub.genre
+                .newSubgenre{:id => "lifestyleCue#{cue.id}ForInference#{inference.id}"}
+          .inferenceActions
+            %p.newClarification{:id => "newClarification#{inference.id}"}
+              = link_to 'new clarification', {:action => 'new_inference_clarification_partial', :inference => inference.id}, remote: true, :onclick => "inference = #{inference.id}"
+            %p.newLifestyleCue{:id => "newLifestyleCue#{inference.id}"}
+              = link_to 'add lifestyle cue', {:action => 'new_lifestyle_cue_partial', :inference => inference.id}, remote: true, :onclick => "inference = #{inference.id}"
+            %p.edit 
+              = link_to 'edit', edit_inference_path(inference)
+            %p.edit= link_to 'destroy', inference, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+        .right
+          %ul.inferenceClarifications{:id => "inference#{inference.id}"}
+            - inference.inference_clarifications.each do |clarification|
+              %li 
+                %input{:type=>'radio', :name=> inference.id, :id=>"clarification#{clarification.id}"}
+                %label{:for=>"clarification#{clarification.id}"}
+                  = clarification.clarification
+                %table.clarifications
+                  - clarification.inference_clarification_weights.each do |inference_weight|
+                    %tr
+                      %td
+                        = inference_weight.inference.inference
+                      %td
+                        = inference_weight.weight
+                %ul.subgenres
+                  - clarification.lifestyle_subgenres.each do |sub|
+                    %li 
+                      = sub.genre
+                %p{:id => "newInferenceClarificationWeight#{clarification.id}"}
+                  = link_to 'new inference clarification weight', {:action => 'new_inference_clarification_weight_partial', :clarification => clarification.id}, remote: true, :onclick => "clarification = #{clarification.id}"
+                - if !inference.lifestyle_cues.first.nil?
+                  %p{:id => "newClarification#{clarification.id}Subgenre"}
+                    = link_to 'new subgenre', {:action => 'new_clarification_lifestyle_subgenre_partial', :clarification => clarification.id, :cue => inference.lifestyle_cues.first.id}, remote: true
+                - else
+                  %p Add a lifestyle cue in order to add new subgenres
+
+- else 
+  Naughty. You aren't supposed to be here.
+
+:javascript
+  $(document).bind('ajax:success', function(){ 
+    $('#inference_clarification_weight_inference_id').combobox();
+  });
+  var inference = 0;
+  var clarification = 0;
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+
+      _removeIfInvalid: function( event, ui ) {
+
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery );

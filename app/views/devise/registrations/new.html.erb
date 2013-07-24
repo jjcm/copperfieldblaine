@@ -1,0 +1,78 @@
+<h2>Demographics Information</h2>
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div><%= f.label :name %><br />
+  <%= f.text_field :name, :autofocus => true %></div>
+
+  <div class="hidden"><%= f.label :email %><br />
+  <%= f.email_field :email%></div>
+
+  <div><%= f.label :age %><br />
+    <%= f.radio_button :age, 18, {:id => '18'}%>
+    <%= f.label :age, "18-24", {:for => '18'}%><br/>
+    <%= f.radio_button :age, 25, {:id => '25'}%>
+    <%= f.label :age, "25-30", {:for => '25'}%><br/>
+    <%= f.radio_button :age, 31, {:id => '31'}%>
+    <%= f.label :age, "31-35", {:for => '31'}%><br/>
+    <%= f.radio_button :age, 36, {:id => '36'}%>
+    <%= f.label :age, "36-40", {:for => '36'}%><br/>
+    <%= f.radio_button :age, 41, {:id => '41'}%>
+    <%= f.label :age, "41-54", {:for => '41'}%>
+  </div>
+
+  <div><%= f.label :gender %><br />
+    <%= f.radio_button :gender, true, {:id => 'male'}%>
+    <%= f.label :gender, "Male", {:for => 'male'}%><br/>
+    <%= f.radio_button :gender, false, {:id => 'female'}%>
+    <%= f.label :gender, "Female", {:for => 'female'}%>
+  </div>
+
+  <div class="hidden"><%= f.label :password %><br />
+  <%= f.password_field :password, :value => "asdfasdf"%> </div>
+
+  <div class="hidden"><%= f.label :password_confirmation %><br />
+  <%= f.password_field :password_confirmation, :value => "asdfasdf"%></div>
+
+<div><%= f.submit "Next", { :id => "signUpButton"} %></div>
+<% end %>
+
+
+<script type="text/javascript">
+  var namefield = $('#user_name');
+  var emailfield = $('#user_email');
+  var d = new Date();
+  namefield.bind("propertychange keyup input paste", function(event){
+      emailfield.val(sanitize(namefield.val().replace(/\s+/g, '')) + '@' + d.getTime() + '.com');
+      
+  });
+
+  var escapable = /[\\\"\x00-\x1f\x7f-\uffff]/g,
+      meta = {    // table of character substitutions
+          '\b': '\\b',
+          '\t': '\\t',
+          '\n': '\\n',
+          '\f': '\\f',
+          '\r': '\\r',
+          '"' : '\\"',
+          '\\': '\\\\'
+      };
+
+  function sanitize(string) {
+
+// If the string contains no control characters, no quote characters, and no
+// backslash characters, then we can safely slap some quotes around it.
+// Otherwise we must also replace the offending characters with safe escape
+// sequences.
+
+      escapable.lastIndex = 0;
+      return escapable.test(string) ?
+          string.replace(escapable, function (a) {
+              var c = meta[a];
+              return typeof c === 'string' ? c :
+                  ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+          }) :
+          string;
+  }
+</script>

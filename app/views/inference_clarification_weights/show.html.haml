@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Inference:
+  = @inference_clarification_weight.inference_id
+%p
+  %b Weight:
+  = @inference_clarification_weight.weight
+%p
+  %b Inference clarification:
+  = @inference_clarification_weight.inference_clarification_id
+
+= link_to 'Edit', edit_inference_clarification_weight_path(@inference_clarification_weight)
+\|
+= link_to 'Back', inference_clarification_weights_path

@@ -1,0 +1,28 @@
+%h1 Listing inference_clarification_weights
+
+%table
+  %tr
+    %th Inference
+    %th Weight
+    %th Inference clarification
+    %th Truthiness
+    %th
+    %th
+    %th
+
+  - @inference_clarification_weights.each do |inference_clarification_weight|
+    %tr
+      - if (!inference_clarification_weight.inference.nil? )
+        %td= inference_clarification_weight.inference.inference
+      %td= inference_clarification_weight.weight
+      - if (!inference_clarification_weight.inference_clarification.nil?)
+        %td= inference_clarification_weight.inference_clarification.clarification
+      - if (!inference_clarification_weight.inference_clarification.nil?)
+        %td= inference_clarification_weight.inference_clarification.truth_weight
+      %td= link_to 'Show', inference_clarification_weight
+      %td= link_to 'Edit', edit_inference_clarification_weight_path(inference_clarification_weight)
+      %td= link_to 'Destroy', inference_clarification_weight, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Inference clarification weight', new_inference_clarification_weight_path

@@ -1,0 +1,2 @@
+module LifestyleSubgenresHelper
+end

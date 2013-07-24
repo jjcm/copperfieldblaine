@@ -1,0 +1,30 @@
+= form_for([@user_inference_response], remote: true) do |f|
+  - if @user_inference_response.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@user_inference_response.errors.count, "error")} prohibited this user_inference_response from being saved:"
+      %ul
+        - @user_inference_response.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field{:id => "#response_for_#{params[:inference]}"}
+    %li
+      = f.radio_button :response, true, {:id => "user_inference_response_true_#{params[:inference]}", :onclick => "$('#submit_for_inference_#{params[:inference]}').click()"}
+      = f.label :response, "true", {:for => "user_inference_response_true_#{params[:inference]}"}
+    %li
+      = f.radio_button :response, false, {:onclick => "$('#clarifications_for_#{params[:inference]}').removeClass('hidden');", :id => "user_inference_response_false_#{params[:inference]}"}
+      = f.label :response, "false", {:for => "user_inference_response_false_#{params[:inference]}"}
+  .field.hidden{:id => "clarifications_for_#{params[:inference]}"}
+    .clarificationRequest Please clarify:
+    - @inference_clarifications.each do |clarification|
+      %li
+        = f.radio_button :inference_clarification_id, clarification.id, {:onclick => "$('#submit_for_inference_#{params[:inference]}').click()"}
+        = f.label :inference_clarification_id, clarification.clarification, {:for => "user_inference_response_inference_clarification_id_#{clarification.id}"}
+  .field.hidden
+    = f.label :inference_id
+    = f.number_field :inference_id, :value => params[:inference]
+  .field.hidden
+    = f.label :user_id
+    = f.number_field :user_id, :value => current_user.id
+  .actions.hidden
+    = f.submit 'Save', :class => "submitAnswerButtons", :id => "submit_for_inference_#{params[:inference]}", :onclick => "$('#inference#{params[:inference]}').addClass('hiddenMove'); updateCount();"
+

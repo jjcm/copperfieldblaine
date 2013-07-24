@@ -1,0 +1,2 @@
+<% inference = params[:inference] %>
+$("#userInferenceResponseFor<%=inference%>").html('<%=j render partial: 'user_inference_responses/ajaxform', locals: { response: @response}%>');

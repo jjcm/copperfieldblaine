@@ -1,0 +1,2 @@
+<% answer = params[:answer] %>
+$("#newInferenceWeight" + answer).html('<%=j render partial: 'inference_weights/ajaxform', locals: { inference_weight: @inference_weight, answer: answer }%>');

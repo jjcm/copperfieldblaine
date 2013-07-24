@@ -1,0 +1,16 @@
+= form_for([@lifestyle_subgenre], remote: true) do |f|
+  - if @lifestyle_subgenre.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@lifestyle_subgenre.errors.count, "error")} prohibited this lifestyle_subgenre from being saved:"
+      %ul
+        - @lifestyle_subgenre.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :genre
+    = f.text_field :genre
+  .field.hidden
+    = f.label :lifestyle_cue_id
+    = f.number_field :lifestyle_cue_id, :value => params[:id]
+  .actions
+    = f.submit 'Save', :remote => true

@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Genre:
+  = @lifestyle_subgenre.genre
+%p
+  %b Lifestyle cue:
+  = @lifestyle_subgenre.lifestyle_cue_id
+
+= link_to 'Edit', edit_lifestyle_subgenre_path(@lifestyle_subgenre)
+\|
+= link_to 'Back', lifestyle_subgenres_path

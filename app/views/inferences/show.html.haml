@@ -1,0 +1,72 @@
+%p#notice= notice
+
+%h1
+  %b Inference:
+  = @inference.inference
+
+%h2#showing 
+  %a#reveal{:href => "#"} Showing false responses
+%br
+%br
+%table#false
+  %thead
+    %tr
+      %th User
+      %th Inference Clarification
+      %th Answers That Triggered Inference | Weights
+  %tbody
+  - @inference.user_inference_responses.each do |response|
+    - if !response.response
+      %tr
+        %td= response.user.nil? ? "NO USER" : response.user.name
+        %td= response.inference_clarification.nil? ? "NO CLARIFICATION" : response.inference_clarification.clarification
+        %td
+          - if !response.user.nil? 
+            %table
+              - response.user.user_answers.each do |answer|
+                - if @answersThatTrigger.index(answer.answer_id)
+                  %tr
+                    %td{:style => "width: 300px"}= answer.answer.question.question
+                    %td{:style => "width: 300px"}= answer.answer.answer
+                    - answer.answer.inference_weights.each do |weight|
+                      - if weight.inference_id == @inference.id
+                        %td= weight.weight
+
+%table#true.hidden
+  %thead
+    %tr
+      %th User
+      %th Answers That Triggered Inference | Weights
+  %tbody
+  - @inference.user_inference_responses.each do |response|
+    - if response.response
+      %tr
+        %td= response.user.nil? ? "NO USER" : response.user.name
+        - if !response.user.nil? 
+          %td
+            %table
+              - response.user.user_answers.each do |answer|
+                - if @answersThatTrigger.index(answer.answer_id)
+                  %tr
+                    %td{:style => "width: 300px"}= answer.answer.question.question
+                    %td{:style => "width: 300px"}= answer.answer.answer
+                    - answer.answer.inference_weights.each do |weight|
+                      - if weight.inference_id == @inference.id
+                        %td= weight.weight
+
+:javascript
+  var responseAnswer = false;
+  $('#reveal').click(function(){
+    responseAnswer = !responseAnswer;
+    $('#reveal').html("Showing " + responseAnswer + " responses");
+    if(responseAnswer){
+      $('#true').removeClass('hidden');
+      $('#false').addClass('hidden');
+    }
+    else{
+      $('#true').addClass('hidden');
+      $('#false').removeClass('hidden');
+    }
+
+  });
+    

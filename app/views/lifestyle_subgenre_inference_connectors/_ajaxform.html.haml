@@ -1,0 +1,18 @@
+= form_for([@lifestyle_subgenre_inference_connector], remote: true) do |f|
+  - if @lifestyle_subgenre_inference_connector.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@lifestyle_subgenre_inference_connector.errors.count, "error")} prohibited this lifestyle_subgenre_inference_connector from being saved:"
+      %ul
+        - @lifestyle_subgenre_inference_connector.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field.hidden
+    = f.label :inference_id
+    = f.number_field :inference_id, :value => inference
+
+  .field
+    = f.label :lifestyle_subgenre_id
+    = f.collection_select :lifestyle_subgenre_id, @subgenres, :id, :genre
+
+  .actions
+    = f.submit 'Save'

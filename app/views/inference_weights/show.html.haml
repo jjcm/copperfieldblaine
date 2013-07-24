@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Answer:
+  = @inference_weight.answer_id
+%p
+  %b Inference:
+  = @inference_weight.inference_id
+%p
+  %b Weight:
+  = @inference_weight.weight
+
+= link_to 'Edit', edit_inference_weight_path(@inference_weight)
+\|
+= link_to 'Back', inference_weights_path

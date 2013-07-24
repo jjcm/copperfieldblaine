@@ -1,0 +1,19 @@
+%h1 Listing lifestyle_cues
+
+%table
+  %tr
+    %th Cue
+    %th
+    %th
+    %th
+
+  - @lifestyle_cues.each do |lifestyle_cue|
+    %tr
+      %td= lifestyle_cue.cue
+      %td= link_to 'Show', lifestyle_cue
+      %td= link_to 'Edit', edit_lifestyle_cue_path(lifestyle_cue)
+      %td= link_to 'Destroy', lifestyle_cue, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Lifestyle cue', new_lifestyle_cue_path

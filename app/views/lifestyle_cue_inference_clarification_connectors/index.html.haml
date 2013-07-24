@@ -1,0 +1,17 @@
+%h1 Listing lifestyle_cue_inference_clarification_connectors
+
+%table
+  %tr
+    %th
+    %th
+    %th
+
+  - @lifestyle_cue_inference_clarification_connectors.each do |lifestyle_cue_inference_clarification_connector|
+    %tr
+      %td= link_to 'Show', lifestyle_cue_inference_clarification_connector
+      %td= link_to 'Edit', edit_lifestyle_cue_inference_clarification_connector_path(lifestyle_cue_inference_clarification_connector)
+      %td= link_to 'Destroy', lifestyle_cue_inference_clarification_connector, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Lifestyle cue inference clarification connector', new_lifestyle_cue_inference_clarification_connector_path

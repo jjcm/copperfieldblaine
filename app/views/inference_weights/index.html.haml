@@ -1,0 +1,29 @@
+- if ( current_user.admin? )
+  %h1 Listing inference_weights
+
+  %table#inferenceWeights
+    %thead
+      %tr
+        %th Answer
+        %th Inference
+        %th Weight
+        %th
+        %th
+        %th
+
+    %tbody
+      - @inference_weights.each do |inference_weight|
+        %tr
+          %td= inference_weight.answer.answer if !inference_weight.answer.nil?
+          %td= inference_weight.inference.inference
+          %td= inference_weight.weight
+          %td= link_to 'Show', inference_weight
+          %td= link_to 'Edit', edit_inference_weight_path(inference_weight)
+          %td= link_to 'Destroy', inference_weight, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+  %br
+
+
+:javascript
+  $('#inferenceWeights').tablesorter();
+

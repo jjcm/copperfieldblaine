@@ -1,0 +1,56 @@
+-dataResponse = []
+%h1 Lifestyle Cues
+%h2 Shows which Lifestyle Cues we were able to get data on for each user. 
+%h2 N/A means that the answers the user selected did not give us any data for that Lifestyle Cue. 
+%p.description
+  The percentages in each square show the True to False ratio of the inferences the user received in that Lifestyle Cue category. 
+%table#lifestyleCueAverages
+  %thead
+    %tr
+      %th 
+      - @lifestyles.each do |lifestyle|
+        %th{:id => "inference#{lifestyle.id}"}
+          = lifestyle.cue
+    %tr
+      %th AVERAGE:
+      - @lifestyles.each do |lifestyle|
+        - dataResponse = computeAverageInferenceResponsePercentForLifestyle(lifestyle)
+        - match = dataResponse["match"]
+        %th.average{:style=>computeAnalyticsColor(match)}
+          = formatPercentage(match)
+          %br
+          %i
+            total:
+          = "#{dataResponse["correct"]}/#{dataResponse["total"]}"
+          %br
+          %i
+            per user:
+          = "#{formatDecimal(dataResponse["correct"]/@users.count)}/#{formatDecimal(dataResponse["total"]/@users.count)}"
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td 
+          = user.name
+          - i = 0
+          - @lifestyles.each do |lifestyle|
+            - dataResponse = computeMatchPercent(user, lifestyle)
+            - if dataResponse["match"] == -1
+              %td
+                NA
+            - else
+              %td{:style=>computeAnalyticsColor(dataResponse["match"])}
+                = formatPercentage(dataResponse["match"])
+                %br
+                = "#{dataResponse["correct"]}/#{dataResponse["total"]}"
+                .clarification
+                  - user.user_inference_responses.each do |response|
+                    - response.inference.lifestyle_cues.each do |cue|
+                      - if(cue == lifestyle)
+                        - if(response.response || (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10))
+                          %p.true
+                            = response.inference.inference
+                        - else
+                          %p.false
+                            = response.inference.inference
+:javascript
+  $('#lifestyleCueAverages').tablesorter();

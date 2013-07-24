@@ -1,0 +1,2 @@
+<% question = params[:question] %>
+$("#newAnswer" + question).html('<%=j render partial: 'answers/ajaxform', locals: { answer: @answer, question: question }%>');

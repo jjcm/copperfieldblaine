@@ -1,0 +1,27 @@
+%p#notice= notice
+
+%p
+  %b Cue:
+  = @lifestyle_cue.cue
+
+= link_to 'Edit', edit_lifestyle_cue_path(@lifestyle_cue)
+\|
+= link_to 'Back', lifestyle_cues_path
+#newLifestyleSubgenre
+= link_to 'new lifestyle subgenre', {:action => 'new_lifestyle_subgenre_partial', :lifestyle_cue => @lifestyle_cue.id}, remote: true
+%table
+  %tr
+    %th Genre
+    %th Lifestyle cue
+    %th
+    %th
+    %th
+
+  - @lifestyle_subgenres.each do |lifestyle_subgenre|
+    %tr
+      %td= lifestyle_subgenre.genre
+      %td= lifestyle_subgenre.lifestyle_cue_id
+      %td= link_to 'Show', lifestyle_subgenre
+      %td= link_to 'Edit', edit_lifestyle_subgenre_path(lifestyle_subgenre)
+      %td= link_to 'Destroy', lifestyle_subgenre, :method => :delete, :data => { :confirm => 'Are you sure?' }
+

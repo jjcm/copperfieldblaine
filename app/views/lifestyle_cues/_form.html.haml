@@ -1,0 +1,13 @@
+= form_for @lifestyle_cue do |f|
+  - if @lifestyle_cue.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@lifestyle_cue.errors.count, "error")} prohibited this lifestyle_cue from being saved:"
+      %ul
+        - @lifestyle_cue.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :cue
+    = f.text_field :cue
+  .actions
+    = f.submit 'Save'

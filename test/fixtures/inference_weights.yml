@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  answer_id: 1
+  inference_id: 1
+  weight: 
+
+two:
+  answer_id: 1
+  inference_id: 1
+  weight: 

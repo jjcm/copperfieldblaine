@@ -1,0 +1,28 @@
+%h1 Listing user_inference_responses
+
+%table#userInferenceResponses
+  %thead
+    %tr
+      %th Response
+      %th Inference
+      %th User
+      %th
+      %th
+      %th
+
+  %tbody
+    - @user_inference_responses.each do |user_inference_response|
+      %tr
+        %td= user_inference_response.inference_clarification.nil? ? "true" : user_inference_response.inference_clarification.clarification
+        %td= user_inference_response.inference.nil? ? "NO INFERENCE" : user_inference_response.inference.inference
+        %td= user_inference_response.user.nil? ? "NO USER" : user_inference_response.user.name
+        %td= link_to 'Show', user_inference_response
+        %td= link_to 'Edit', edit_user_inference_response_path(user_inference_response)
+        %td= link_to 'Destroy', user_inference_response, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New User inference response', new_user_inference_response_path
+
+:javascript
+  $('#userInferenceResponses').tablesorter();

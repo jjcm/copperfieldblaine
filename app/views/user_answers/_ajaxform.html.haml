@@ -1,0 +1,22 @@
+= form_for([@user_answer], remote: true) do |f|
+  - if @user_answer.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@user_answer.errors.count, "error")} prohibited this user_answer from being saved:"
+      %ul
+        - @user_answer.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field.hidden
+    = f.label :user_id
+    = f.number_field :user_id, :value => current_user.id
+  .field
+    - @answers.each do |answer|
+      %li 
+        = f.radio_button :answer_id, answer.id
+        = f.label :answer_id, answer.answer
+
+  .field.hidden
+    = f.label :survey_id
+    = f.number_field :survey_id, :value => params[:id]
+  .actions.hidden
+    = f.submit 'Save', :class => "submitAnswerButtons"

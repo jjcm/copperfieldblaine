@@ -1,0 +1,5 @@
+<% inference = params[:inference] %>
+<% cue = params[:cue] %>
+inference = <%= params[:inference] %>;
+cue = <%= params[:cue] %>;
+$("#lifestyleCue" + cue + "ForInference" + inference).html('<%=j render partial: 'lifestyle_subgenre_inference_connectors/ajaxform', locals: { lifestyle_subgenre_inference_connector: @lifestyle_subgenre_inference_connector, subgenres: @subgenres, inference: inference }%>');

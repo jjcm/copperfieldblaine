@@ -1,0 +1,32 @@
+= form_for([@inference_clarification], remote: true) do |f|
+  - if @inference_clarification.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@inference_clarification.errors.count, "error")} prohibited this inference_clarification from being saved:"
+      %ul
+        - @inference_clarification.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :clarification
+    = f.text_field :clarification
+  .field
+    %li
+      = f.radio_button :truth_weight, 10, {:id => 'same'}
+      = f.label :truth_weight, "Same, just different wording", {:for => 'same'}
+    %li
+      = f.radio_button :truth_weight, 5, {:id => 'middle'}
+      = f.label :truth_weight, "Middle ground", {:for => 'middle'}
+    %li
+      = f.radio_button :truth_weight, 0, {:id => 'opposite'}
+      = f.label :truth_weight, "Opposite of the inference", {:for => 'opposite'}
+  .field.hidden
+    = f.label :inference_id
+    = f.number_field :inference_id, :value => inference
+  .actions
+    = f.submit 'Save', :id => "createNewClarificationForInference#{inference}"
+
+:javascript
+  $("#createNewClarificationForInference#{inference}").click(function(){
+    var inference = $('#inference#{inference}');
+    inference.append('<li><input name="#{inference}" type="radio"> ' + $('#inference_clarification_clarification').val() + '</input></li>');
+  });

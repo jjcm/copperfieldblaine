@@ -1,0 +1,21 @@
+%h1 Listing lifestyle_cue_inference_connectors
+
+%table
+  %tr
+    %th
+    %th
+    %th
+    %th
+    %th
+
+  - @lifestyle_cue_inference_connectors.each do |lifestyle_cue_inference_connector|
+    %tr
+      %td= lifestyle_cue_inference_connector.inference.inference
+      %td= lifestyle_cue_inference_connector.lifestyle_cue.cue
+      %td= link_to 'Show', lifestyle_cue_inference_connector
+      %td= link_to 'Edit', edit_lifestyle_cue_inference_connector_path(lifestyle_cue_inference_connector)
+      %td= link_to 'Destroy', lifestyle_cue_inference_connector, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Lifestyle cue inference connector', new_lifestyle_cue_inference_connector_path

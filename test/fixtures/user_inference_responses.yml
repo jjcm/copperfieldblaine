@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  response: false
+  inference_id: 1
+
+two:
+  response: false
+  inference_id: 1

@@ -1,0 +1,2 @@
+<% clarification = params[:clarification] %>
+$("#newInferenceClarificationWeight" + clarification).html('<%=j render partial: 'inference_clarification_weights/ajaxform', locals: { inference_clarification_weight: @inference_clarification_weight, clarification: clarification }%>');

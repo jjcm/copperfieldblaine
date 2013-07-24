@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Clarification:
+  = @inference_clarification.clarification
+%p
+  %b Inference:
+  = @inference_clarification.inference_id
+
+= link_to 'Edit', edit_inference_clarification_path(@inference_clarification)
+\|
+= link_to 'Back', inference_clarifications_path

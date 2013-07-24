@@ -1,0 +1,66 @@
+- responseMapping = []
+- averages = []
+%h1 Inference Success
+%h2 Shows when each inference is marked TRUE or FALSE.
+%h2 The AVERAGE on the top row shows the overall percentage of each inference success.
+%p.description
+  The green squares mean the user marked that inference as TRUE or False-TRUE. (False-TRUE is when they marked it false, but selected the inference clarification with the same meaning as the original inference.)
+%p.description
+  The red squares mean the user marked that inference as FALSE. Scroll over the red square to see the inference clarification that the user selected. 
+%table#successes
+  %thead
+    %tr
+      %th &nbsp;
+      - @inferences.each do |inference|
+        - responseMapping.push(inference.id)
+        -# instantiate our averages tracking array
+        - averages.push({count: 0, total: 0})
+        %th{:id => "inference#{inference.id}"}
+          = inference.inference
+          %br
+          = link_to "(view inference)", inference
+    -# reverse sort the ID's of the inferences so we can pop them off the stack easily
+    -# responseMapping.sort{ |x,y| y <=> x }
+    %tr#topAverages
+  %tbody
+    - @users.each do |user|
+      - user_responses = user.user_inference_responses
+      - if (user_responses.length > 0)
+        - user_responses = user_responses.sort{ |x,y| y.inference_id <=> x.inference_id }
+        - nextResponse = user_responses.pop()
+        %tr
+          %td 
+            = user.name
+          - i = 0
+          - responseMapping.each do |response|
+            - if ( !nextResponse.nil? && nextResponse.inference_id == response)
+              %td{:class => nextResponse.response ? 'true' : ( nextResponse.inference_clarification.truth_weight == 10 ? 'true' : 'false')} 
+                - if ( nextResponse.response == false && !nextResponse.inference_clarification_id.nil? )
+                  .clarification
+                    = nextResponse.inference_clarification.clarification
+              - averages[i][:count] = averages[i][:count] + 1
+              - averages[i][:total] = averages[i][:total] + (nextResponse.response ? 1 : ( nextResponse.inference_clarification.truth_weight == 10 ? 1 : 0))
+              - nextResponse = user_responses.pop()
+            - else
+              %td.noResponse
+                NA
+            - i = i + 1
+  %thead
+    %tr#bottomAverages
+      %th.average AVERAGE: 
+      - averages.each do |average|
+        - computedAverage = 0.0
+        - if (average[:count] > 0)
+          - computedAverage = (average[:total] * 100.0) / average[:count]
+        %th.average{ :style => computeAnalyticsColor(computedAverage / 100)}
+          = formatPercentage(computedAverage / 100) 
+          %br
+          = "#{average[:total]}/#{average[:count]}"
+        -#%th.average{ :style => "background-color: #{ computedAverage > 95 ? '#91D100' : computedAverage > 90 ? '#81b100' : computedAverage >= 80 ? '#50aa00' : '#FF2E12'}"}
+
+:javascript
+  $(document).ready(function(){
+    $('#topAverages').html($('#bottomAverages').html());
+  });
+
+  $('#successes').tablesorter();

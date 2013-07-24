@@ -1,0 +1,21 @@
+%h1 Listing lifestyle_subgenre_inference_connectors
+
+%table
+  %tr
+    %th
+    %th
+    %th
+    %th
+    %th
+
+  - @lifestyle_subgenre_inference_connectors.each do |lifestyle_subgenre_inference_connector|
+    %tr
+      %td= lifestyle_subgenre_inference_connector.inference.inference
+      %td= lifestyle_subgenre_inference_connector.lifestyle_subgenre.genre 
+      %td= link_to 'Show', lifestyle_subgenre_inference_connector
+      %td= link_to 'Edit', edit_lifestyle_subgenre_inference_connector_path(lifestyle_subgenre_inference_connector)
+      %td= link_to 'Destroy', lifestyle_subgenre_inference_connector, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Lifestyle subgenre inference connector', new_lifestyle_subgenre_inference_connector_path

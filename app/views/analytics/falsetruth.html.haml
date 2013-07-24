@@ -1,0 +1,19 @@
+%h1 False-Truths
+%h2 Of the total of the inferences marked false, what percentage of those are false-truths?
+%h2 The higher the percentage, the more we should think about re-wording the original inference or answer.
+%table
+  %tr
+    %th Inference
+    - @inferences.each do |inference|
+      %th{:id => "inference#{inference.id}"}
+        = inference.inference
+  %tr
+    %td Percentage
+    - @inferences.each do |inference|
+      %td
+        - truths = computeTruths(inference)
+        - falsetruths = computeFalsetruths(inference)
+        - if(truths != 0)
+          = "#{(falsetruths * 100) / truths}%"
+
+

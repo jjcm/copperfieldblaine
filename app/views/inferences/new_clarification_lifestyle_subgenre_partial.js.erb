@@ -1,0 +1,3 @@
+<% clarification = params[:clarification] %>
+clarification = <%= params[:clarification] %>;
+$("#newClarification"+clarification+"Subgenre").html('<%=j render partial: 'lifestyle_subgenre_inference_clarification_connectors/ajaxform', locals: { lifestyle_subgenre_inference_clarification_connector: @lifestyle_subgenre_inference_clarification_connector, subgenres: @subgenres, clarification: clarification }%>');

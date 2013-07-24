@@ -1,0 +1,2 @@
+<% lifestyle_cue = params[:lifestyle_cue] %>
+$("#newLifestyleSubgenre").html('<%=j render partial: 'lifestyle_subgenres/ajaxform', locals: { lifestyle_subgenre: @lifestyle_subgenre, lifestyle_cue: lifestyle_cue }%>');

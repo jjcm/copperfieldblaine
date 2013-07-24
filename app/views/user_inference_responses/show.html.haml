@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Response:
+  = @user_inference_response.response
+%p
+  %b Inference:
+  = @user_inference_response.inference_id
+
+= link_to 'Edit', edit_user_inference_response_path(@user_inference_response)
+\|
+= link_to 'Back', user_inference_responses_path

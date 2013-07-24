@@ -1,0 +1,77 @@
+- if !user_signed_in?
+  %center
+    %h1 Thank you.
+- else
+  %p
+    %h1 
+      = !current_user.nil? && current_user.admin? ? @survey.name : "Welcome. Please answer the following questions."
+    = link_to '(change name)', edit_survey_path(@survey) if !current_user.nil? && current_user.admin?
+
+  - if !current_user.nil? && current_user.admin?
+    %p
+      %b Created by:
+      = @survey.user.name
+
+  #questions
+    - @survey.questions.each do |question|
+      .question
+        .left
+          %h4 
+            %span
+              = question.question
+          - if !current_user.nil? && current_user.admin?
+            %p.newAnswer{:id => "newAnswer#{question.id}"}
+              = link_to 'new answer', {:action => 'new_answer_partial', :question => question.id}, remote: true, :onclick => "question = #{question.id}"
+        .right
+          %ul.inferenceClarifications{:id => "questions#{question.id}"}
+            - if !current_user.nil? && current_user.admin?
+              - question.answers.each do |answer|
+                %li 
+                  %input{:type=>'radio', :name=> question.id, :id=>"answer#{answer.id}"}
+                  %label{:for=>"answer#{answer.id}"}
+                    = answer.answer
+                  - if !current_user.nil? && current_user.admin?
+                    %table#inferences.clarifications
+                      - answer.inference_weights.each do |inference_weight|
+                        %tr
+                          %td
+                            = inference_weight.inference.inference
+                          %td
+                            = inference_weight.weight
+                    %p{:id => "newInferenceWeight#{answer.id}"}
+                      = link_to 'new inference weight', {:action => 'new_inference_weight_partial', :answer => answer.id}, remote: true, :onclick => "answer = #{answer.id}"
+            - else 
+              = link_to 'new user_answer_partial', {:action => 'new_user_answer_partial', :question => question.id}, remote: true, class: "newUserAnswerPartialLink hidden"
+              .answerArea{:id => "userAnswersFor#{question.id}"}
+
+          
+          
+
+
+
+
+  - if !current_user.nil? && current_user.admin?
+    %h3 Add a new question
+    = render "questions/ajaxform"
+  - else
+    = submit_tag "submit", id: "submitAnswers", class: "magicButton"
+
+:javascript
+  var question = 0;
+  var anaswer = 0;
+  var submitted = false;
+  var successfulSubmissions = 0;
+  $(document).ready(function(){$('.newUserAnswerPartialLink').each(function(){$(this).click()})});
+  $("#submitAnswers").click(function(){
+    if(!submitted) {
+      submitted = true;
+      $('#submitAnswers').val('submitting...');
+      $(document).bind('ajax:complete', function(){ 
+        successfulSubmissions++;
+        if(successfulSubmissions >= #{@survey.questions.length}){
+          window.location.href = "/users/#{current_user.nil? ? 0 : current_user.id}";
+        }
+      });
+      $('.submitAnswerButtons').each(function(){$(this).click()});
+    }
+  });
