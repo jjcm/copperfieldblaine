@@ -15,6 +15,10 @@ class SurveysController < ApplicationController
   def show
     @survey = Survey.find(params[:id])
     @question = Question.new
+    if !current_user.nil?
+      @userAnswers = UserAnswer.find(:all, :conditions => ["user_id = ?", current_user.id])
+      @userAnswers = @userAnswers.map{|answer| answer.answer.question.id}
+    end
 
     respond_to do |format|
       format.html # show.html.erb

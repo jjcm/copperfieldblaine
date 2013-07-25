@@ -23,8 +23,10 @@
     = f.label :inference_id
     = f.number_field :inference_id, :value => params[:inference]
   .field.hidden
+    = f.label :followup
+    = f.number_field :followup, :value => params[:followup]
+  .field.hidden
     = f.label :user_id
     = f.number_field :user_id, :value => current_user.id
   .actions.hidden
     = f.submit 'Save', :class => "submitAnswerButtons", :id => "submit_for_inference_#{params[:inference]}", :onclick => "$('#inference#{params[:inference]}').addClass('hiddenMove'); updateCount();"
-

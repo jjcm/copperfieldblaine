@@ -1,5 +1,5 @@
 class UserInferenceResponse < ActiveRecord::Base
-  attr_accessible :inference_id, :user_id, :inference_clarification_id, :response
+  attr_accessible :inference_id, :user_id, :inference_clarification_id, :response, :followup
 
   belongs_to :user
   belongs_to :inference_clarification

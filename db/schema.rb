@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130606233132) do
+ActiveRecord::Schema.define(:version => 20130725181340) do
 
   create_table "answers", :force => true do |t|
     t.integer  "question_id"
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20130606233132) do
     t.integer  "user_id"
     t.integer  "inference_clarification_id"
     t.boolean  "response"
+    t.boolean  "followup"
   end
 
   create_table "user_inference_weights", :force => true do |t|

@@ -5,7 +5,7 @@
 #inferences
   - totalValidInferences = 0
   - @user_inference_weights.each  do |weight|
-    - if ( weight.weight >= 80 )
+    - if ( weight.weight >= 80 && !@user_inference_responses.include?(weight.inference_id))
       - totalValidInferences = totalValidInferences + 1
       .inference{:id => "inference#{weight.inference.id}"}
         .left
@@ -35,7 +35,7 @@
                     %p{:id => "newInferenceClarificationWeight#{clarification.id}"}
                       = link_to 'new inference clarification weight', {:action => 'new_inference_clarification_weight_partial', :clarification => clarification.id}, remote: true, :onclick => "clarification = #{clarification.id}"
             - else 
-              = link_to 'new user_inference_response_partial', {:action => 'new_user_inference_response_partial', :inference => weight.inference.id}, remote: true, :class => "newUserInferenceResponsePartialLink hidden"
+              = link_to 'new user_inference_response_partial', {:action => 'new_user_inference_response_partial', :inference => weight.inference.id, :followup => false}, remote: true, :class => "newUserInferenceResponsePartialLink hidden"
               .answerArea{:id => "userInferenceResponseFor#{weight.inference.id}"}
 
       - if !current_user.nil? && current_user.admin?

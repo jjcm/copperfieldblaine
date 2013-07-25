@@ -15,7 +15,9 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @user_inference_weights = UserInferenceWeight.find(:all, :conditions => ["user_id = ?", params[:id]])
-
+    @user_inference_responses = UserInferenceResponse.find(:all, :conditions => ["user_id = ?", params[:id]])
+    @user_inference_responses = @user_inference_responses.map{|response| response.inference_id}
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @user }

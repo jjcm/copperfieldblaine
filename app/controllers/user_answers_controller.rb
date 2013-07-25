@@ -41,9 +41,14 @@ class UserAnswersController < ApplicationController
   # POST /user_answers.json
   def create
     @user_answer = UserAnswer.new(params[:user_answer])
-
+    
+    if !current_user.nil?
+      @userAnswers = UserAnswer.find(:all, :conditions => ["user_id = ?", current_user.id])
+      @userAnswers = @userAnswers.map{|answer| answer.answer.question.id}
+    end
+    
     respond_to do |format|
-      if @user_answer.save
+      if !@userAnswers.include?(@user_answer.answer.question_id) && @user_answer.save
         format.html { redirect_to @user_answer, notice: 'User answer was successfully created.' }
         format.json { render json: @user_answer, status: :created, location: @user_answer }
       else

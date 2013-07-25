@@ -41,9 +41,14 @@ class UserInferenceResponsesController < ApplicationController
   # POST /user_inference_responses.json
   def create
     @user_inference_response = UserInferenceResponse.new(params[:user_inference_response])
+    @user_inference_responses = UserInferenceResponse.find(:all, :conditions => ["user_id = ?", current_user.id])
+    @user_inference_responses = @user_inference_responses.map{|response| response.inference_id}
+
+    logger.debug "Responses = #{@user_inference_responses}"
+    logger.debug "Current Response = #{@user_inference_response.inference_id}"
 
     respond_to do |format|
-      if @user_inference_response.save
+      if !@user_inference_responses.include?(@user_inference_response.inference_id) && @user_inference_response.save
         format.html { redirect_to @user_inference_response, notice: 'User inference response was successfully created.' }
         format.json { render json: @user_inference_response, status: :created, location: @user_inference_response }
       else
