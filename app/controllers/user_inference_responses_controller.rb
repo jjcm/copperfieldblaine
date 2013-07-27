@@ -44,6 +44,7 @@ class UserInferenceResponsesController < ApplicationController
     @user_inference_responses = UserInferenceResponse.find(:all, :conditions => ["user_id = ?", current_user.id])
     @user_inference_responses = @user_inference_responses.map{|response| response.inference_id}
 
+    logger.debug "Followup = #{params[:user_inference_response]}"
     logger.debug "Responses = #{@user_inference_responses}"
     logger.debug "Current Response = #{@user_inference_response.inference_id}"
 

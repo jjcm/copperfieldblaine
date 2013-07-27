@@ -38,15 +38,17 @@ module AnalyticsHelper
     match = 0.0
     nomatch = 0.0
     user.user_inference_responses.each do |response|
-      response.inference.lifestyle_cues.each do |cue|
-        if(cue == lifestyle)
-          if(response.response)
-            match = match + 1
-          else
-            if(!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10)
+      if !response.followup
+        response.inference.lifestyle_cues.each do |cue|
+          if(cue == lifestyle)
+            if(response.response)
               match = match + 1
             else
-              nomatch = nomatch + 1
+              if(!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10)
+                match = match + 1
+              else
+                nomatch = nomatch + 1
+              end
             end
           end
         end
@@ -65,15 +67,17 @@ module AnalyticsHelper
     totalResponse = 0.0
     lifestyle.inferences.each do |inference|
       inference.user_inference_responses.each do |response|
-        if response.response
-          correctResponse = correctResponse + 1 
-        else
-          if !response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10
-            correctResponse = correctResponse + 1
+        if !response.followup
+          if response.response
+            correctResponse = correctResponse + 1 
+          else
+            if !response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10
+              correctResponse = correctResponse + 1
+            end
           end
+          totalResponse = totalResponse + 1
         end
       end
-      totalResponse = totalResponse + inference.user_inference_responses.count
     end
 
     return {"match" => totalResponse > 0 ? correctResponse / totalResponse : -1, "total" => totalResponse, "correct" => correctResponse}

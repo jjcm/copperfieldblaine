@@ -24,7 +24,7 @@
     = f.number_field :inference_id, :value => params[:inference]
   .field.hidden
     = f.label :followup
-    = f.number_field :followup, :value => params[:followup]
+    = f.text_field :followup, :value => params[:followup]
   .field.hidden
     = f.label :user_id
     = f.number_field :user_id, :value => current_user.id

@@ -34,12 +34,16 @@
           - i = 0
           - responseMapping.each do |response|
             - if ( !nextResponse.nil? && nextResponse.inference_id == response)
-              %td{:class => nextResponse.response ? 'true' : ( nextResponse.inference_clarification.truth_weight == 10 ? 'true' : 'false')} 
-                - if ( nextResponse.response == false && !nextResponse.inference_clarification_id.nil? )
-                  .clarification
-                    = nextResponse.inference_clarification.clarification
-              - averages[i][:count] = averages[i][:count] + 1
-              - averages[i][:total] = averages[i][:total] + (nextResponse.response ? 1 : ( nextResponse.inference_clarification.truth_weight == 10 ? 1 : 0))
+              - if !nextResponse.followup
+                %td{:class => nextResponse.response ? 'true' : ( nextResponse.inference_clarification.truth_weight == 10 ? 'true' : 'false')} 
+                  - if ( nextResponse.response == false && !nextResponse.inference_clarification_id.nil? )
+                    .clarification
+                      = nextResponse.inference_clarification.clarification
+                - averages[i][:count] = averages[i][:count] + 1
+                - averages[i][:total] = averages[i][:total] + (nextResponse.response ? 1 : ( nextResponse.inference_clarification.truth_weight == 10 ? 1 : 0))
+              - else
+                %td.noResponse
+                  NA
               - nextResponse = user_responses.pop()
             - else
               %td.noResponse

@@ -44,13 +44,14 @@
                 = "#{dataResponse["correct"]}/#{dataResponse["total"]}"
                 .clarification
                   - user.user_inference_responses.each do |response|
-                    - response.inference.lifestyle_cues.each do |cue|
-                      - if(cue == lifestyle)
-                        - if(response.response || (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10))
-                          %p.true
-                            = response.inference.inference
-                        - else
-                          %p.false
-                            = response.inference.inference
+                    - if !response.followup
+                      - response.inference.lifestyle_cues.each do |cue|
+                        - if(cue == lifestyle)
+                          - if(response.response || (!response.inference_clarification.nil? && response.inference_clarification.truth_weight == 10))
+                            %p.true
+                              = response.inference.inference
+                          - else
+                            %p.false
+                              = response.inference.inference
 :javascript
   $('#lifestyleCueAverages').tablesorter();
